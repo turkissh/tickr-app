@@ -36,8 +36,8 @@ module.exports = function(router,passport){
 	    if (!user) { res.send({status:1}); }
 	    req.logIn(user, function(err) {
 	      if (err) { res.send({status:1}); }
-	      //res.send({status:0});
-	      res.redirect('http://www.google.com');
+	      res.send({status:0});
+	      //res.redirect('http://www.google.com');
 	    });
 	  })(req, res, next);
 	});
