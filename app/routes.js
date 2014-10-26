@@ -32,12 +32,12 @@ module.exports = function(router,passport){
 	router.get('/auth/facebook/callback', function(req, res, next) {
 	  console.log("Response from facebook");
 	  passport.authenticate('facebook', function(err, user, info) {
-	    if (err) { res.send({status:1}); }
-	    if (!user) { res.send({status:1}); }
+	    if (err) { res.jsonp({status:1}); }
+	    if (!user) { res.jsonp({status:1}); }
 	    req.logIn(user, function(err) {
-	      if (err) { res.send({status:1}); }
+	      if (err) { res.jsonp({status:1}); }
 	      res.redirect('http://localhost:8100/#/main');
-	      //res.send({status:0});
+	      //res.jsonp({status:0});
 	    });
 	  })(req, res, next);
 	});
@@ -45,22 +45,20 @@ module.exports = function(router,passport){
 	//Logout
 	router.get('/auth/logout',function(req,res){
 		req.logout();
-		res.send({status:0});
+		res.jsonp({status:0});
 	});
 
 	//Get the user id from the session
 	router.get('/auth/userid',function(req,res){
-		res.send({"userId": req.user.userId});
+		res.jsonp({"userId": req.user.userId});
 	});
 
 	//Check if the user is logged or not
 	router.get('/auth/hasSession',function (req,res) {
 		
 		if ( !isEmptyObject(req.session.passport) ){
-			//res.send({status:0});
 			res.jsonp({status:0});
 		}else{
-			//res.send({status:2});
 			res.jsonp({status:2});
 		}
 		
@@ -87,10 +85,10 @@ module.exports = function(router,passport){
 				if(err){
 					console.error("Error getting user profile");
 					console.error(err);
-					res.send({status:1});
+					res.jsonp({status:1});
 				}
 
-				res.send(user);
+				res.jsonp(user);
 			});
 		})
 
@@ -106,12 +104,12 @@ module.exports = function(router,passport){
 				if(err){
 					console.error("Error updating user info");
 					console.error(err);
-					res.send({status:1});
+					res.jsonp({status:1});
 				}
 
 				if (!user) {
 					console.info("User dont exists!");
-					res.send({status:1});
+					res.jsonp({status:1});
 				}else{
 
 					//Create the object to save
@@ -131,15 +129,15 @@ module.exports = function(router,passport){
 									if(err){
 										console.error("Error saving new info :@");
 										console.error(err);
-										res.send({status:1});
+										res.jsonp({status:1});
 									}
 
 									if(save){
 										console.log("Info updated");
-										res.send({status:0});
+										res.jsonp({status:0});
 									}else{
 										console.warn("No user updated");
-										res.send({status:1});
+										res.jsonp({status:1});
 									}
 					});
 
@@ -164,7 +162,7 @@ module.exports = function(router,passport){
 				if(err){
 					console.error("Error removing previous tick");
 					console.error(err);
-					res.send({status:1});
+					res.jsonp({status:1});
 				}
 
 				var tick = new Tick(); 		// create a new instance of the Bear model
@@ -175,7 +173,7 @@ module.exports = function(router,passport){
 				tick.save(function(err) {
 					if (err){
 						console.error("Error saving tick " + err);
-						res.send({status : 1});
+						res.jsonp({status : 1});
 					}
 
 					res.json({ status : 0 });
@@ -193,7 +191,7 @@ module.exports = function(router,passport){
 			Tick.findOne({userId:req.body.userId},function(err,firstTick){
 				if(err){
 					console.error("Error getting the initial tick");
-					res.send({status:1});
+					res.jsonp({status:1});
 				}
 
 				if(firstTick){
@@ -208,7 +206,7 @@ module.exports = function(router,passport){
 		      				if(err){
 		      					console.error("Error getting ticks near: " + req.body.userId);
 		      					console.error(err);
-		      					res.send({status:1});
+		      					res.jsonp({status:1});
 		      				}	      				
 
 		      				if(ticks)
@@ -216,10 +214,10 @@ module.exports = function(router,passport){
 
 		      				if(ticks.length > 0){
 		      					console.log(ticks);
-		      					res.send({status:0,status:ticks});
+		      					res.jsonp({status:0,status:ticks});
 		      				}else{
 		      					console.warn("No ticks near :( you seems to be alone");
-		      					res.send({status:1});
+		      					res.jsonp({status:1});
 		      				}
 
 
@@ -227,14 +225,14 @@ module.exports = function(router,passport){
 
 	      			}else{
 	      				console.info("There wasn't first tick");
-	      				res.send({status:1});
+	      				res.jsonp({status:1});
 	      			}
 
 
 	      		}else{
 
 	      			console.warn("There is not first tick!");
-	      			res.send({status:1});
+	      			res.jsonp({status:1});
 
 	      		}
 			});
@@ -254,7 +252,7 @@ module.exports = function(router,passport){
 
 				if (err){
 					console.error("Error getting ticks:" + err);
-					res.send( null );
+					res.jsonp( null );
 				}
 
 				if(user){
@@ -264,10 +262,10 @@ module.exports = function(router,passport){
 
 					matches = getUserMatches(User,user.matches);
 
-					res.send( matches );
+					res.jsonp( matches );
 				}else{
 					console.warn("User dont exists..!");
-					res.send({status:1});
+					res.jsonp({status:1});
 				}
 			});
 		})
@@ -289,7 +287,7 @@ module.exports = function(router,passport){
 					if(err){
 						console.error("Error getting the second match!");
 						console.error(err);
-						res.send({status:1});
+						res.jsonp({status:1});
 					}
 
 					if(match){
@@ -300,7 +298,7 @@ module.exports = function(router,passport){
 							function(err,user){
 								if(err){
 									console.error("Error finding requester to match");
-									res.send({status:1});
+									res.jsonp({status:1});
 								}
 
 							console.log("Requester matched!");
@@ -311,7 +309,7 @@ module.exports = function(router,passport){
 							function(err,user){
 								if(err){
 									console.error("Error finding matched to match");
-									res.send({status:1});
+									res.jsonp({status:1});
 								}
 							console.log("Matched matched!");
 
@@ -322,7 +320,7 @@ module.exports = function(router,passport){
 									function(err,match){
 										if(err){
 											console.error("Error removing the match :(");
-											res.send({status:1});
+											res.jsonp({status:1});
 										}
 									console.info("Match removed");
 
@@ -330,11 +328,11 @@ module.exports = function(router,passport){
 										function(err,tick){
 											if(err){
 												console.error("Error removing ticks!");
-												res.send({status:1});
+												res.jsonp({status:1});
 											}
 
 											console.info("Ticks removed, have a nice day ;)");
-											res.send({status:0});
+											res.jsonp({status:0});
 										})
 
 								});
@@ -354,11 +352,11 @@ module.exports = function(router,passport){
 						match.save(function(err){
 							if(err){
 								console.error("Error saving first match!");
-								res.send({status:1});
+								res.jsonp({status:1});
 							}
 
 							console.info("Match saved, waiting for a roommate!");
-							res.send({status:0});
+							res.jsonp({status:0});
 						});
 
 					}
@@ -405,7 +403,7 @@ function isLoggedIn (req,res,next) {
 	if (!isEmptyObject(req.session.passport)){
 		return next();
 	}else{
-		res.send({status:2});
+		res.jsonp({status:2});
 	}
 
 }
