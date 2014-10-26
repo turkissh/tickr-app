@@ -57,9 +57,11 @@ module.exports = function(router,passport){
 	router.get('/auth/hasSession',function (req,res) {
 		
 		if ( !isEmptyObject(req.session.passport) ){
-			res.send({status:0});
+			//res.send({status:0});
+			res.jsonp({status:0});
 		}else{
-			res.send({status:2});
+			//res.send({status:2});
+			res.jsonp({status:2});
 		}
 		
 	});
