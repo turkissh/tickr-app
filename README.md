@@ -30,6 +30,10 @@ For developer:
 
 		(*) /api/auth/logout	-> Will drop your session
 
+		(<) /api/auth/userId 	-> Return the userId of the session
+
+		(<) /api/auth/hasSession -> Return 0 if has session, 2 if not
+
 
 	+=====+
 	|	  |
