@@ -9,6 +9,7 @@ module.exports = function(router,passport){
 	// middleware to use for all requests
 	router.use(function(req, res, next) {
 		// do logging
+		res.contentType('application/json');
 		console.log('New request recieved!');
 		next();
 	});
