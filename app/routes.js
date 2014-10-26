@@ -30,13 +30,13 @@ module.exports = function(router,passport){
 	//callback
 	router.get('/auth/facebook/callback', function(req, res, next) {
 	  console.log("Response from facebook");
-	  res.set('Content-Type', 'application/javascript');
 	  passport.authenticate('facebook', function(err, user, info) {
 	    if (err) { res.send({status:1}); }
 	    if (!user) { res.send({status:1}); }
 	    req.logIn(user, function(err) {
 	      if (err) { res.send({status:1}); }
 	      res.redirect('http://localhost:8100/#/main');
+	      //res.send({status:0});
 	    });
 	  })(req, res, next);
 	});
@@ -45,6 +45,22 @@ module.exports = function(router,passport){
 	router.get('/auth/logout',function(req,res){
 		req.logout();
 		res.send({status:0});
+	});
+
+	//Get the user id from the session
+	router.get('/auth/userid',function(req,res){
+		res.send({"userId": req.user.userId});
+	});
+
+	//Check if the user is logged or not
+	router.get('/auth/hasSession',function (req,res) {
+		
+		if ( !isEmptyObject(req.session.passport) ){
+			res.send({status:0});
+		}else{
+			res.send({status:2});
+		}
+		
 	});
 
 
@@ -125,8 +141,6 @@ module.exports = function(router,passport){
 					});
 
 				};
-
-
 
 			});
 
@@ -385,9 +399,19 @@ function getUserMatches(User,userMatches) {
 //make sure the user is logged
 function isLoggedIn (req,res,next) {
 	
-	if (req.isAuthenticated())
+	if (!isEmptyObject(req.session.passport)){
 		return next();
+	}else{
+		res.send({status:2});
+	}
 
-	res.send({status:2});
 }
 
+//Check if a object is empty
+function isEmptyObject(obj) {
+    var name;
+    for (name in obj) {
+        return false;
+    }
+    return true;
+}

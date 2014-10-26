@@ -10,14 +10,14 @@ module.exports = function(passport) {
 
 	// used to serialize the user for the session
     passport.serializeUser(function(user, done) {
-        done(null, user.id);
+        done(null, user._id);
     });
 
     // used to deserialize the user
     passport.deserializeUser(function(id, done) {
-        User.findOne({userId:id}, function(err, user) {
-        	if(err) done(err);
-            done(err, user);
+        User.findById(id, function(err, user) {
+        	if(err) done(err,null);
+            done(null, user);
         });
     });
    
