@@ -36,7 +36,7 @@ module.exports = function(router,passport){
 	    if (!user) { res.jsonp({status:1}); }
 	    req.logIn(user, function(err) {
 	      if (err) { res.jsonp({status:1}); }
-	      res.redirect('http://localhost:8100/#/main');
+	      res.redirect('?userId=' + user.userId);
 	      //res.jsonp({status:0});
 	    });
 	  })(req, res, next);
