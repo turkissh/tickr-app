@@ -51,7 +51,11 @@ module.exports = function(router,passport){
 
 	//Get the user id from the session
 	router.get('/auth/userid',function(req,res){
-		res.jsonp({"userId": req.user.userId});
+		if(req.user && req.user.userId){
+			res.jsonp({"userId": req.user.userId});
+		}else{
+			res.jsonp({"status": 1});
+		}
 	});
 
 	//Check if the user is logged or not
