@@ -37,7 +37,7 @@ module.exports = function(router,passport){
 	    req.logIn(user, function(err) {
 	      if (err) { res.jsonp({status:1}); }
 	      res.set('Content-Type', 'text/html');
-	      res.send('<a href="javascript:window.close()">Click to exit..</a>');
+	      res.send('<a href="javascript:this.window.close()">Click to exit..</a>');
 	      //res.jsonp({status:0});
 	    });
 	  })(req, res, next);
@@ -51,8 +51,7 @@ module.exports = function(router,passport){
 
 	//Get the user id from the session
 	router.get('/auth/userid',function(req,res){
-		//res.jsonp({"userId": req.user.userId});
-		res.send({url:req.url});
+		res.jsonp({"userId": req.user.userId});
 	});
 
 	//Check if the user is logged or not
