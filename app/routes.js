@@ -39,8 +39,8 @@ module.exports = function(router,passport){
 	    req.logIn(user, function(err) {
 	      if (err) { res.jsonp({status:1}); }
 	      res.set('Content-Type', 'text/html');
-	      res.send('<a href="javascript:this.window.close()">Click to exit..</a>');
-	      //res.jsonp({status:0});
+	      //res.send('<a href="javascript:this.window.close()">Click to exit..</a>');
+	      res.jsonp({status:0});
 	    });
 	  })(req, res, next);
 	});
