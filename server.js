@@ -18,12 +18,12 @@ app.use(bodyParser.json());
 
 // required for passport
 app.use(session({ 
-                    secret: 'thisistickerbitch' ,
-                    cookie : {
-                        maxAge: 1800000, //previously set to just 1800 - which was too low
-                        httpOnly: true
-                    }
-                })); // session secret
+        secret: 'thisistickerbitch' ,
+        cookie : {
+            maxAge: 1800000, //previously set to just 1800 - which was too low
+            httpOnly: true
+        }
+    })); // session secret
 
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
@@ -51,8 +51,8 @@ app.use('/api', router);
 // Add headers
 app.use(function (req, res, next) {
 
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  // res.header("Access-Control-Allow-Origin", "*");
+  // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 
 });

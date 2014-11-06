@@ -9,6 +9,8 @@ module.exports = function(router,passport){
 	// middleware to use for all requests
 	router.use(function(req, res, next) {
 		// do logging
+		res.header("Access-Control-Allow-Origin", "*");
+  		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 		res.contentType('application/json');
 		console.log('New request recieved!');
 		next();
