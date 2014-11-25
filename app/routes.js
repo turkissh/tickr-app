@@ -84,9 +84,9 @@ module.exports = function(router,passport){
 		//Get user info
 		.get(isLoggedIn,function(req,res){
 
-			console.log("Getting info of: " + req.body.userId);
+			console.log("Getting info of: " + req.query.userId);
 
-			User.findOne({ userId: req.body.userId},
+			User.findOne({ userId: req.query.userId},
 						{userName:1,photo:1,info:1},
 						function(err,user){
 				if(err){
@@ -160,7 +160,6 @@ module.exports = function(router,passport){
 	//---------------------------TICKS things!
 	router.route('/tick')
 
-		// create a tick (accessed at POST http://localhost:8080/api/tick)
 		.post(isLoggedIn,function(req, res) {
 			
 			console.log("New tick recieved from: " + req.body.userId);
