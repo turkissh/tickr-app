@@ -192,9 +192,9 @@ module.exports = function(router,passport){
 
 		// Gettings ticks near specified user
 		.get(isLoggedIn,function(req, res) {
-			console.log("Checking ticks for: " + req.body.userId);
+			console.log("Checking ticks for: " + req.query.userId);
 			
-			Tick.findOne({userId:req.body.userId},function(err,firstTick){
+			Tick.findOne({userId:req.query.userId},function(err,firstTick){
 				if(err){
 					console.error("Error getting the initial tick");
 					res.jsonp({status:1});
@@ -210,7 +210,7 @@ module.exports = function(router,passport){
 						Tick.find({location : { "$near" : firstTick.location, "$maxDistance" : 1/111.12}},
 						function (err, ticks) {
 		      				if(err){
-		      					console.error("Error getting ticks near: " + req.body.userId);
+		      					console.error("Error getting ticks near: " + req.query.userId);
 		      					console.error(err);
 		      					res.jsonp({status:1});
 		      				}	      				
@@ -409,7 +409,7 @@ function isLoggedIn (req,res,next) {
 	if (!isEmptyObject(req.session.passport)){
 		return next();
 	}else{
-		res.jsonp({status:2});
+		res.jsonp({status:3});
 	}
 
 }
