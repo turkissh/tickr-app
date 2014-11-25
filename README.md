@@ -84,4 +84,4 @@ For developer:
 									fb 				=> user's fb
 									fbVisibility 	=> user's fb visibility
 
-		(<) /api/user/info 		-> Gets the user information of the userId send in the body
+		(<) /api/user/info 		-> Gets the user information of the userId in the url
