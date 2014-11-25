@@ -87,7 +87,7 @@ module.exports = function(router,passport){
 			console.log("Getting info of: " + req.query.userId);
 
 			User.findOne({ userId: req.query.userId},
-						{userName:1,photo:1,info:1},
+						{userId:1,userName:1,photo:1,info:1},
 						function(err,user){
 				if(err){
 					console.error("Error getting user profile");
