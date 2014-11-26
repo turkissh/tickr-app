@@ -84,9 +84,9 @@ module.exports = function(router,passport){
 		//Get user info
 		.get(isLoggedIn,function(req,res){
 
-			console.log("Getting info of: " + req.body.userId);
+			console.log("Getting info of: " + req.quey.userId);
 
-			User.findOne({ userId: req.body.userId},
+			User.findOne({ userId: req.query.userId},
 						{userName:1,photo:1,info:1},
 						function(err,user){
 				if(err){
@@ -160,7 +160,6 @@ module.exports = function(router,passport){
 	//---------------------------TICKS things!
 	router.route('/tick')
 
-		// create a tick (accessed at POST http://localhost:8080/api/tick)
 		.post(isLoggedIn,function(req, res) {
 			
 			console.log("New tick recieved from: " + req.body.userId);
@@ -192,56 +191,61 @@ module.exports = function(router,passport){
 		})
 
 		// Gettings ticks near specified user
-		.get(isLoggedIn,function(req, res) {
-			console.log("Checking ticks for: " + req.body.userId);
+		.get(function(req, res) {
+			console.log("Checking ticks for: " + req.query.userId);
 			
-			Tick.findOne({userId:req.body.userId},function(err,firstTick){
+			Tick.findOne({userId:req.query.userId},function(err,firstTick){
 				if(err){
 					console.error("Error getting the initial tick");
 					res.jsonp({status:1});
 				}
 
+					
+				//If there was a first tick, checks nears ticks
 				if(firstTick){
 
 					console.info("First tick of " + firstTick.userId + " in " 
-						+ firstTick.location);
+					+ firstTick.location);
 
-					//If there was a first tick, checks nears ticks
-					if(firstTick){
-						Tick.find({location : { "$near" : firstTick.location, "$maxDistance" : 1/111.12}},
-						function (err, ticks) {
-		      				if(err){
-		      					console.error("Error getting ticks near: " + req.body.userId);
-		      					console.error(err);
-		      					res.jsonp({status:1});
-		      				}	      				
+					Tick.find({location : { "$near" : firstTick.location, "$maxDistance" : 1/111.12}},
+					function (err, ticks) {
+	      				if(err){
+	      					console.error("Error getting ticks near: " + req.query.userId);
+	      					console.error(err);
+	      					res.jsonp({status:1});
+	      				}	      				
 
-		      				if(ticks)
-		      					ticks.splice(findIndexByUserId(ticks,firstTick.userId),1);
+	      				//Removes the same tick from the response
+	      				if(ticks)
+	      					ticks.splice(findIndexByUserId(ticks,firstTick.userId),1);
 
-		      				if(ticks.length > 0){
-		      					console.log(ticks);
-		      					res.jsonp({status:0,status:ticks});
-		      				}else{
-		      					console.warn("No ticks near :( you seems to be alone");
-		      					res.jsonp({status:1});
-		      				}
+	      				if(ticks.length > 0){
+	      					//Only get the first 5
+	      					ticks.slice(0,4);
+	      					console.log(ticks);
+	      					//Lets generate the object with all the users
+	      					var response = [];
+
+	      					getUserByTicks(User,ticks,function(response){
+
+	      						res.jsonp(response);
+
+	      					});
+
+	      					
+	      				}else{
+	      					console.warn("No ticks near :( you seems to be alone");
+	      					res.jsonp({status:1});
+	      				}
 
 
-						});
+					});
 
-	      			}else{
-	      				console.info("There wasn't first tick");
-	      				res.jsonp({status:1});
-	      			}
+      			}else{
+      				console.info("There wasn't first tick");
+      				res.jsonp({status:1});
+      			}
 
-
-	      		}else{
-
-	      			console.warn("There is not first tick!");
-	      			res.jsonp({status:1});
-
-	      		}
 			});
 
 	});
@@ -254,11 +258,11 @@ module.exports = function(router,passport){
 		//Get user matches
 		.get(isLoggedIn,function(req,res){
 
-			console.log("Getting ticks for: " + req.query.id);
+			console.log("Getting matches for: " + req.query.id);
 			User.findOne({userId:req.query.id},function(err,user){
 
 				if (err){
-					console.error("Error getting ticks:" + err);
+					console.error("Error getting matches:" + err);
 					res.jsonp( null );
 				}
 
@@ -267,9 +271,11 @@ module.exports = function(router,passport){
 
 					var matches = [];
 
-					matches = getUserMatches(User,user.matches);
+					getUserMatches(User,user.matches,function(matches){
+						res.jsonp( matches );
+					});
 
-					res.jsonp( matches );
+					
 				}else{
 					console.warn("User dont exists..!");
 					res.jsonp({status:1});
@@ -387,22 +393,48 @@ function findIndexByUserId(ticks , thisUserId ){
 	return -1;
 };
 
+//Creates an array with the info of all the ticks near
+function getUserByTicks(User,ticks,next) {
+	
+	//Save the ids of the ticks in an array
+	var ids = [];
+
+	for (var i = 0; i < ticks.length; i++) {
+		ids.push(ticks[i].userId);
+	};
+
+	//Find all the user info for every user in near ticks
+	User
+	.where('userId').in(ids)
+	.select('userId userName photo')
+	.exec(function(err,users){
+
+		//Callback
+		next(users);		
+	});
+
+};
 
 //Creates an array with the info of all the matches
-function getUserMatches(User,userMatches) {
+function getUserMatches(User,userMatches, next) {
 	
+	//save the ids of the matches in an array
 	var matches = [];
 
 	for (var i = 0; i < userMatches.length; i++) {
-
-		User.findOne({userId:userMatches[i]},{userId:1,userName:1,photo:1,info:1},function(err,user){
-
-			matches.push(user);
-
-		})
+		matches.push(userMatches[i]);
 	};
-	return matches;
-}
+
+	User
+	.where('userId').in(matches)
+	.select('userId userName photo info')
+	.exec(function(err,user){
+
+			//Callback
+			next(user);
+
+	});
+};
 
 //make sure the user is logged
 function isLoggedIn (req,res,next) {
