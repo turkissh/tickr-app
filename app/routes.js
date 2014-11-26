@@ -87,8 +87,8 @@ module.exports = function(router,passport){
 			console.log("Getting info of: " + req.quey.userId);
 
 			User.findOne({ userId: req.query.userId},
-						{userName:1,photo:1,info:1},
-						function(err,user){
+					{userId:1,userName:1,photo:1,info:1},
+					function(err,user){
 				if(err){
 					console.error("Error getting user profile");
 					console.error(err);
@@ -191,7 +191,7 @@ module.exports = function(router,passport){
 		})
 
 		// Gettings ticks near specified user
-		.get(function(req, res) {
+		.get(isLoggedIn,function(req, res) {
 			console.log("Checking ticks for: " + req.query.userId);
 			
 			Tick.findOne({userId:req.query.userId},function(err,firstTick){
@@ -442,7 +442,7 @@ function isLoggedIn (req,res,next) {
 	if (!isEmptyObject(req.session.passport)){
 		return next();
 	}else{
-		res.jsonp({status:2});
+		res.jsonp({status:3});
 	}
 
 }
