@@ -87,7 +87,7 @@ module.exports = function(router,passport){
 			console.log("Getting info of: " + req.quey.userId);
 
 			User.findOne({ userId: req.query.userId},
-					{userId:1,userName:1,photo:1,info:1},
+					{userId:1,userName:1,about:1,photo:1,info:1},
 					function(err,user){
 				if(err){
 					console.error("Error getting user profile");
@@ -406,7 +406,7 @@ function getUserByTicks(User,ticks,next) {
 	//Find all the user info for every user in near ticks
 	User
 	.where('userId').in(ids)
-	.select('userId userName photo')
+	.select('userId userName about photo')
 	.exec(function(err,users){
 
 		//Callback
@@ -427,7 +427,7 @@ function getUserMatches(User,userMatches, next) {
 
 	User
 	.where('userId').in(matches)
-	.select('userId userName photo info')
+	.select('userId userName about photo info')
 	.exec(function(err,user){
 
 			//Callback
