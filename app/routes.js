@@ -28,7 +28,7 @@ module.exports = function(router,passport){
 	// =====================================
 	//login
 	router.get('/auth/facebook',
-		passport.authenticate('facebook', { scope : 'email' }));
+		passport.authenticate('facebook', { scope : 'email, user_about_me' }));
 
 	//callback
 	router.get('/auth/facebook/callback', function(req, res, next) {

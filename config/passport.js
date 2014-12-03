@@ -69,6 +69,7 @@ module.exports = function(passport) {
 	                newUser.info.email 	   = profile.emails[0].value; // facebook can return multiple emails so we'll take the first
 	                newUser.info.fb 	   = profile.profileUrl;
 	                newUser.photo 		   = getUserPhotoUrl(profile.id); //Get the facebook photo
+	                newUser.about 		   = profile._json.bio;
 
 					//save our user to the database
 	                newUser.save(function(err) {
