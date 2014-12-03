@@ -90,5 +90,5 @@ module.exports = function(passport) {
 
 //Creates a graph url for getting the user photo
 function getUserPhotoUrl(userId) {
-	return "https://graph.facebook.com/" + userId + "/picture";
+	return "https://graph.facebook.com/" + userId + "/picture?width=200&height=200";
 }
