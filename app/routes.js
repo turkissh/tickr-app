@@ -287,9 +287,9 @@ module.exports = function(router,passport){
 		// Setting a match to a user
 		.post(isLoggedIn,function(req,res){
 
-			console.log("Setting match from " + req.body.userId + " to " + req.params.userId);
+			console.log("Setting match from " + req.body.userId + " to " + req.body.matchId);
 			var requester = req.body.userId;
-			var matched = req.params.userId;
+			var matched = req.body.matchId;
 
 			//Checks if the matchs is the second one
 			Match.findOne({ users : { $in : [ requester , matched ] }} , 
