@@ -82,7 +82,7 @@ module.exports = function(router,passport){
 	router.route('/user/info')
 
 		//Get user info
-		.get(isLoggedIn,function(req,res){
+		.get(function(req,res){
 
 			console.log("Getting info of: " + req.quey.userId);
 
@@ -256,7 +256,7 @@ module.exports = function(router,passport){
 
 
 		//Get user matches
-		.get(function(req,res){
+		.get(isLoggedIn,function(req,res){
 
 			console.log("Getting matches for: " + req.query.userId);
 			var userId = req.query.userId;
