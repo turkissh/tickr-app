@@ -84,7 +84,7 @@ module.exports = function(router,passport){
 		//Get user info
 		.get(function(req,res){
 
-			console.log("Getting info of: " + req.quey.userId);
+			console.log("Getting info of: " + req.query.userId);
 
 			User.findOne({ userId: req.query.userId},
 					{userId:1,userName:1,about:1,photo:1,info:1},
