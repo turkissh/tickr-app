@@ -256,7 +256,7 @@ module.exports = function(router,passport){
 
 
 		//Get user matches
-		.get(isLoggedIn,function(req,res){
+		.get(function(req,res){
 
 			console.log("Getting matches for: " + req.query.userId);
 			var userId = req.query.userId;
