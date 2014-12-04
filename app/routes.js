@@ -259,7 +259,8 @@ module.exports = function(router,passport){
 		.get(isLoggedIn,function(req,res){
 
 			console.log("Getting matches for: " + req.query.userId);
-			User.findOne({userId:req.query.userId},function(err,user){
+			var userId = req.query.userId;
+			User.findOne({'userId':userId},function(err,user){
 
 				if (err){
 					console.error("Error getting matches:" + err);
