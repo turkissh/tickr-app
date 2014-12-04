@@ -82,7 +82,7 @@ module.exports = function(router,passport){
 	router.route('/user/info')
 
 		//Get user info
-		.get(function(req,res){
+		.get(isLoggedIn,function(req,res){
 
 			console.log("Getting info of: " + req.query.userId);
 
