@@ -263,7 +263,7 @@ module.exports = function(router,passport){
 
 				if (err){
 					console.error("Error getting matches:" + err);
-					res.jsonp( null );
+					res.jsonp({status:1});
 				}
 
 				if(user){
@@ -278,7 +278,7 @@ module.exports = function(router,passport){
 					
 				}else{
 					console.warn("User dont exists..!");
-					res.jsonp({status:1});
+					res.jsonp({status:2});
 				}
 			});
 		})
