@@ -1,6 +1,7 @@
 {
   "name": "Tickr",
   "version": "0.0.1",
+  "private": true,
   "description": "A new way to connect with people close to you.",
   "main": "server.js",
   "dependencies": {
